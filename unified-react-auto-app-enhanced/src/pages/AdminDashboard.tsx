@@ -4,7 +4,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { CheckCircle, XCircle, User } from 'lucide-react';
 
-interface Vehiculo {
+interface Auto {
   id: string;
   make: string;
   model: string;
@@ -22,9 +22,9 @@ interface Vehiculo {
 }
 
 const AdminDashboard = () => {
-  const [vehiculos, setVehiculos] = useState<Vehiculo[]>([]);
+  const [autos, setVehiculos] = useState<Auto[]>([]);
   const [filtro, setFiltro] = useState<'pending' | 'approved' | 'rejected'>('pending');
-  const [perfilSeleccionado, setPerfilSeleccionado] = useState<Vehiculo['profiles'] | null>(null);
+  const [perfilSeleccionado, setPerfilSeleccionado] = useState<Auto['profiles'] | null>(null);
 
   useEffect(() => {
     obtenerVehiculos();
@@ -32,7 +32,7 @@ const AdminDashboard = () => {
 
   const obtenerVehiculos = async () => {
     const { data } = await supabase
-      .from('vehicles')
+      .from('autos')
       .select(`
         *,
         profiles (
@@ -49,7 +49,7 @@ const AdminDashboard = () => {
 
   const actualizarEstado = async (id: string, estado: 'approved' | 'rejected') => {
     const { error } = await supabase
-      .from('vehicles')
+      .from('autos')
       .update({ status: estado })
       .eq('id', id);
 
@@ -123,31 +123,31 @@ const AdminDashboard = () => {
       )}
 
       <div className="grid grid-cols-1 gap-6">
-        {vehiculos.map((vehiculo) => (
-          <div key={vehiculo.id} className="bg-white rounded-lg shadow-md overflow-hidden">
+        {autos.map((auto) => (
+          <div key={auto.id} className="bg-white rounded-lg shadow-md overflow-hidden">
             <div className="p-6">
               <div className="flex items-start justify-between">
                 <div>
                   <h2 className="text-xl font-semibold text-gray-900">
-                    {vehiculo.year} {vehiculo.make} {vehiculo.model}
+                    {auto.year} {auto.make} {auto.model}
                   </h2>
                   <div className="flex items-center mt-1 space-x-2">
                     <p className="text-gray-600">
-                      {vehiculo.mileage.toLocaleString()} kilómetros
+                      {auto.mileage.toLocaleString()} kilómetros
                     </p>
                     <button
-                      onClick={() => setPerfilSeleccionado(vehiculo.profiles)}
+                      onClick={() => setPerfilSeleccionado(auto.profiles)}
                       className="flex items-center text-blue-600 hover:text-blue-800"
                     >
                       <User className="h-4 w-4 mr-1" />
-                      <span>{vehiculo.profiles.username}</span>
+                      <span>{auto.profiles.username}</span>
                     </button>
                   </div>
                 </div>
                 {filtro === 'pending' && (
                   <div className="flex space-x-2">
                     <button
-                      onClick={() => actualizarEstado(vehiculo.id, 'approved')}
+                      onClick={() => actualizarEstado(auto.id, 'approved')}
                       className="flex items-center space-x-1 px-3 py-1 bg-green-100 text-green-800 rounded-md hover:bg-green-200"
                     >
                       <CheckCircle className="h-4 w-4" />
@@ -155,7 +155,7 @@ const AdminDashboard = () => {
                     </button>
                 
                     <button
-                      onClick={() => actualizarEstado(vehiculo.id, 'rejected')}
+                      onClick={() => actualizarEstado(auto.id, 'rejected')}
                       className="flex items-center space-x-1 px-3 py-1 bg-red-100 text-red-800 rounded-md hover:bg-red-200"
                     >
                       <XCircle className="h-4 w-4" />
@@ -164,29 +164,29 @@ const AdminDashboard = () => {
                   </div>
                 )}
               </div>
-              {vehiculo.photos && vehiculo.photos.length > 0 && (
+              {auto.photos && auto.photos.length > 0 && (
                 <div className="mt-4 grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {vehiculo.photos.map((photo, index) => (
+                  {auto.photos.map((photo, index) => (
                     <img
                       key={index}
                       src={photo}
-                      alt={`${vehiculo.make} ${vehiculo.model} - Foto ${index + 1}`}
+                      alt={`${auto.make} ${auto.model} - Foto ${index + 1}`}
                       className="w-full h-32 object-cover rounded-md"
                     />
                   ))}
                 </div>
               )}
               <p className="text-gray-700 mt-4">
-                {vehiculo.description}
+                {auto.description}
               </p>
               <p className="text-sm text-gray-500 mt-4">
-                Enviado hace {formatDistanceToNow(new Date(vehiculo.created_at), { locale: es })}
+                Enviado hace {formatDistanceToNow(new Date(auto.created_at), { locale: es })}
               </p>
             </div>
           </div>
         ))}
 
-        {vehiculos.length === 0 && (
+        {autos.length === 0 && (
           <div className="text-center py-12">
             <h3 className="mt-2 text-sm font-medium text-gray-900">No hay vehículos para revisar</h3>
             <p className="mt-1 text-sm text-gray-500">

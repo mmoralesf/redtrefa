@@ -4,7 +4,7 @@ import { Car, LogOut } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 const Navbar = () => {
-  const { user, profile, signOut } = useAuth();
+  const { user, signOut } = useAuth();
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
@@ -27,10 +27,10 @@ const Navbar = () => {
             {user ? (
               <>
                 <Link
-                  to={profile?.is_admin ? '/admin' : '/dashboard'}
+                  to={user?.is_admin ? '/admin' : '/dashboard'}
                   className="text-gray-700 hover:text-blue-600"
                 >
-                  {profile?.is_admin ? 'Panel de Administrador' : 'Mi Panel'}
+                  {user?.is_admin ? 'Panel de Administrador' : 'Mi Panel'}
                 </Link>
                 <button
                   onClick={handleSignOut}

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { Car } from 'lucide-react';
 
-interface Vehicle {
+interface Auto {
   id: string;
   marca: string;
   modelo: string;
@@ -16,14 +16,14 @@ interface Vehicle {
 }
 
 function VehicleList() {
-  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [autos, setVehicles] = useState<Auto[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchVehicles() {
       try {
         const { data, error } = await supabase
-          .from('vehicles')
+          .from('autos')
           .select('*')
           .eq('disponible', true)
           .order('created_at', { ascending: false });
@@ -52,7 +52,7 @@ function VehicleList() {
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold text-gray-900 mb-8">Vehículos Disponibles</h1>
       
-      {vehicles.length === 0 ? (
+      {autos.length === 0 ? (
         <div className="text-center py-12">
           <Car className="mx-auto h-12 w-12 text-gray-400" />
           <h3 className="mt-4 text-lg font-medium text-gray-900">No hay vehículos disponibles</h3>
@@ -60,31 +60,31 @@ function VehicleList() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {vehicles.map((vehicle) => (
-            <div key={vehicle.id} className="bg-white rounded-lg shadow-md overflow-hidden">
+          {autos.map((auto) => (
+            <div key={auto.id} className="bg-white rounded-lg shadow-md overflow-hidden">
               <div className="aspect-w-16 aspect-h-9">
                 <img
-                  src={vehicle.imagenes[0] || 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&q=80'}
-                  alt={`${vehicle.marca} ${vehicle.modelo}`}
+                  src={auto.imagenes[0] || 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&q=80'}
+                  alt={`${auto.marca} ${auto.modelo}`}
                   className="object-cover w-full h-48"
                 />
               </div>
               <div className="p-4">
                 <h2 className="text-xl font-semibold text-gray-900">
-                  {vehicle.marca} {vehicle.modelo}
+                  {auto.marca} {auto.modelo}
                 </h2>
-                <p className="text-gray-600">{vehicle.ano}</p>
+                <p className="text-gray-600">{auto.ano}</p>
                 <div className="mt-2 flex items-center justify-between">
                   <span className="text-2xl font-bold text-blue-600">
-                    ${vehicle.precio.toLocaleString()}
+                    ${auto.precio.toLocaleString()}
                   </span>
                   <span className="text-gray-600">
-                    {vehicle.kilometraje.toLocaleString()} km
+                    {auto.kilometraje.toLocaleString()} km
                   </span>
                 </div>
-                <p className="mt-2 text-gray-600 line-clamp-2">{vehicle.descripcion}</p>
+                <p className="mt-2 text-gray-600 line-clamp-2">{auto.descripcion}</p>
                 <Link
-                  to={`/aplicar/${vehicle.id}`}
+                  to={`/aplicar/${auto.id}`}
                   className="mt-4 block w-full bg-blue-600 text-white text-center py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200"
                 >
                   Aplicar Ahora

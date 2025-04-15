@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import useAuth from '../hooks/useAuth';
+import { useAuth } from '../contexts/useAuth';
 
-interface Vehicle {
+interface Auto {
   id: string;
   marca: string;
   modelo: string;
@@ -15,7 +15,7 @@ function Application() {
   const { vehicleId } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [vehicle, setVehicle] = useState<Vehicle | null>(null);
+  const [auto, setVehicle] = useState<Auto | null>(null);
   const [formData, setFormData] = useState({
     ingreso_mensual: '',
     empleo: '',
@@ -33,7 +33,7 @@ function Application() {
     async function fetchVehicle() {
       try {
         const { data, error } = await supabase
-          .from('vehicles')
+          .from('autos')
           .select('*')
           .eq('id', vehicleId)
           .single();
@@ -83,7 +83,7 @@ function Application() {
     });
   };
 
-  if (!vehicle) {
+  if (!auto) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -107,19 +107,19 @@ function Application() {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <p className="text-gray-600">Marca</p>
-              <p className="font-medium">{vehicle.marca}</p>
+              <p className="font-medium">{auto.marca}</p>
             </div>
             <div>
               <p className="text-gray-600">Modelo</p>
-              <p className="font-medium">{vehicle.modelo}</p>
+              <p className="font-medium">{auto.modelo}</p>
             </div>
             <div>
               <p className="text-gray-600">Año</p>
-              <p className="font-medium">{vehicle.ano}</p>
+              <p className="font-medium">{auto.ano}</p>
             </div>
             <div>
               <p className="text-gray-600">Precio</p>
-              <p className="font-medium">${vehicle.precio.toLocaleString()}</p>
+              <p className="font-medium">${auto.precio.toLocaleString()}</p>
             </div>
           </div>
         </div>

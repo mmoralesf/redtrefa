@@ -1,7 +1,8 @@
-
+import React from 'react';
 import { useState, useEffect } from 'react';
 import { Auto } from '../types';
 import { Link } from 'react-router-dom';
+
 
 const dummyAutos: Auto[] = [
   {
